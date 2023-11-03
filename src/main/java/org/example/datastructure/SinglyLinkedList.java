@@ -1,7 +1,5 @@
 package org.example.datastructure;
 
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.Objects;
 
 public class SinglyLinkedList {
@@ -213,8 +211,6 @@ public class SinglyLinkedList {
         while (isCurrentNodeAndNextNotNull(fast)) {
             fast = fast.nextNode.nextNode;
             slow = slow.nextNode;
-            System.out.println("slow = " + slow.data);
-            System.out.println("fast = " + fast.data);
             if (fast == slow) return getStartingNode(slow);
         }
         return null;
@@ -227,6 +223,65 @@ public class SinglyLinkedList {
             slow = slow.nextNode;
         }
         return temp;
+    }
+
+    private void removeLoop() {
+        if (isHeadNull()) return;
+
+        ListNode fast = head;
+        ListNode slow = head;
+
+        while (isCurrentNodeAndNextNotNull(fast)) {
+            fast = fast.nextNode.nextNode;
+            slow = slow.nextNode;
+            if (fast == slow) {
+                ListNode temp = head;
+                while (temp.nextNode != slow.nextNode) {
+                    temp = temp.nextNode;
+                    slow = slow.nextNode;
+                }
+                slow.nextNode = null;
+                return;
+            }
+        }
+    }
+
+    public static ListNode merge(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        while (a != null && b != null) {
+            if (a.data >= b.data) {
+                tail.nextNode = b;
+                b = b.nextNode;
+            } else {
+                tail.nextNode = a;
+                a = a.nextNode;
+            }
+            tail = tail.nextNode;
+        }
+        if (a == null) tail.nextNode = b;
+        else tail.nextNode = a;
+        return dummy.nextNode;
+    }
+
+    public static ListNode sumTwo(ListNode a, ListNode b) {
+        ListNode dummy = new ListNode(0);
+        ListNode tail = dummy;
+        int carry = 0;
+        while (a != null || b != null) {
+            int x = a != null ? a.data : 0;
+            int y = b != null ? b.data : 0;
+            int sum = carry + x + y;
+            carry = sum / 10;
+            tail.nextNode = new ListNode(sum % 10);
+            tail = tail.nextNode;
+            if (a != null) a = a.nextNode;
+            if (b != null) b = b.nextNode;
+        }
+        if (carry > 0) {
+            tail.nextNode = new ListNode(carry);
+        }
+        return dummy.nextNode;
     }
 
     private boolean isCurrentNodeAndNextNotNull(ListNode node) {
@@ -288,11 +343,13 @@ public class SinglyLinkedList {
         ListNode value3 = new ListNode(3);
         ListNode value4 = new ListNode(4);
         ListNode value5 = new ListNode(5);
+        ListNode value6 = new ListNode(6);
         loop.head.nextNode = value2;
         value2.nextNode = value3;
         value3.nextNode = value4;
         value4.nextNode = value5;
-        value5.nextNode = value2;
+        value5.nextNode = value6;
+        value6.nextNode = value2;
         /*
         Visual of loop:
         1 --> 2 --> 3
@@ -301,5 +358,18 @@ public class SinglyLinkedList {
          */
         System.out.printf("Found a loop in singlyLinkedList? %s%n", loop.containsLoop());
         System.out.println("loop.startNodeInALoop() = " + loop.startNodeInALoop().data);
+        loop.removeLoop();
+        loop.display();
+        SinglyLinkedList listNode = new SinglyLinkedList();
+        loop.reverse();
+        listNode.head = SinglyLinkedList.sumTwo(loop.head, loop.head);
+        listNode.reverse();
+        listNode.display();
+        System.out.printf("Found a loop in singlyLinkedList? %s%n", loop.containsLoop());
+
+        SinglyLinkedList merged = new SinglyLinkedList();
+
+        merged.head = SinglyLinkedList.merge(singlyLinkedList.head, loop.head);
+        merged.display();
     }
 }
