@@ -1,5 +1,7 @@
 package org.example.datastructure;
 
+import java.util.NoSuchElementException;
+
 public class DoublyLinkedList {
     private ListNode head;
     private ListNode tail;
@@ -56,11 +58,55 @@ public class DoublyLinkedList {
         System.out.println("null");
     }
 
+    public void unshift(int data) {
+        ListNode newNode = new ListNode(data);
+        if (isEmpty()) tail = newNode;
+        else head.previousNode = newNode;
+        newNode.nextNode = head;
+        head = newNode;
+        length++;
+    }
+
+    public ListNode shift() {
+        if (isEmpty()) throw new NoSuchElementException();
+        ListNode temp = head;
+        if (head == tail) tail = null;
+        else head.nextNode.previousNode = null;
+        head = head.nextNode;
+        temp.nextNode = null;
+        length--;
+        return temp;
+    }
+
+    public ListNode pop() {
+        if (isEmpty()) throw new NoSuchElementException();
+        ListNode temp = tail;
+        if (head == tail) head = null;
+        else tail.previousNode.nextNode = null;
+        tail = tail.previousNode;
+        temp.previousNode = null;
+        length--;
+        return temp;
+    }
+
     public static void main(String[] args) {
         DoublyLinkedList doublyLinkedList = new DoublyLinkedList();
         doublyLinkedList.insertLast(1);
         doublyLinkedList.insertLast(2);
         doublyLinkedList.insertLast(3);
+        doublyLinkedList.insertLast(6);
+        doublyLinkedList.insertLast(8);
+        doublyLinkedList.insertLast(9);
+        doublyLinkedList.displayForward();
+        doublyLinkedList.displayBackward();
+        doublyLinkedList.unshift(88);
+        doublyLinkedList.displayForward();
+        System.out.println("doublyLinkedList.length = " + doublyLinkedList.length);
+        System.out.println("doublyLinkedList.shift() = " + doublyLinkedList.shift().data);
+        doublyLinkedList.displayForward();
+        doublyLinkedList.unshift(4);
+        System.out.println("doublyLinkedList.pop() = " + doublyLinkedList.pop().data);
+        System.out.println("doublyLinkedList.pop() = " + doublyLinkedList.pop().data);
         doublyLinkedList.displayForward();
         doublyLinkedList.displayBackward();
     }
