@@ -1,7 +1,5 @@
 package org.example.datastructure;
 
-import java.time.Duration;
-import java.time.Instant;
 import java.util.EmptyStackException;
 
 public class Stack {
