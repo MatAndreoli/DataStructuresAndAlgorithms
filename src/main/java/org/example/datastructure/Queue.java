@@ -71,6 +71,33 @@ public class Queue<T> {
         return result;
     }
 
+    public static String[] generateHexNumbers(int n) {
+        String[] result = new String[n];
+        Queue<String> q = new Queue<>();
+        int i = 0;
+        while (i < n) {
+            String temp;
+            if (i >= 1) {
+                temp = q.dequeue();
+                result[i] = temp;
+                q.enqueue(temp + "0");
+            } else {
+                temp = "0";
+                result[i] = temp;
+                temp = "";
+            }
+            for (char c = '1'; c <= '9'; c++) {
+                q.enqueue(temp + c);
+            }
+            for (char c = 'A'; c <= 'F'; c++) {
+                q.enqueue(temp + c);
+            }
+            i++;
+        }
+
+        return result;
+    }
+
     public static void main(String[] args) {
         Queue<Integer> queue = new Queue<>();
         queue.enqueue(5);
@@ -85,5 +112,6 @@ public class Queue<T> {
         queue.print();
 
         System.out.println("Queue.generateBinaryNumbers(6) = " + Arrays.toString(Queue.generateBinaryNumbers(1000)));
+        System.out.println("Queue.generateHexNumbers(100) = " + Arrays.toString(Queue.generateHexNumbers(56)));
     }
 }
