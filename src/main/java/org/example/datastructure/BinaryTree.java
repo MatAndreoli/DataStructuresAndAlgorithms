@@ -86,6 +86,39 @@ public class BinaryTree<T> {
         return result;
     }
 
+    public void insert(int value) {
+        root = (TreeNode<T>) insertInt(root, value);
+    }
+
+    public TreeNode<Integer> insertInt(TreeNode<T> root, int value) {
+        if (root == null) {
+            return new TreeNode<>(value);
+        }
+
+        try {
+            if (value < (Integer) root.data) {
+                root.left = (TreeNode<T>) insertInt(root.left, value);
+            } else {
+                root.right = (TreeNode<T>) insertInt(root.right, value);
+            }
+
+            return (TreeNode<Integer>) root;
+        } catch (Exception e) {
+            System.out.println("Given TreeNode is invalid type, expected Integer.");
+            return new TreeNode<>(0);
+        }
+    }
+
+    public TreeNode<Integer> findNumber(int value) {
+        return findNumber((TreeNode<Integer>) root, value);
+    }
+
+    public TreeNode<Integer> findNumber(TreeNode<Integer> root, int value) {
+        if (root == null || root.data == value) return root;
+        if (value < root.data) return findNumber(root.left, value);
+        else return findNumber(root.right, value);
+    }
+
     public static void main(String[] args) {
         BinaryTree<Integer> binaryTree = new BinaryTree<>();
         BinaryTree<String> tree = new BinaryTree<>();
@@ -94,7 +127,14 @@ public class BinaryTree<T> {
         binaryTree.preOrder();
         binaryTree.inOrder();
         tree.preOrder();
-
         System.out.println("binaryTree.findMax() = " + binaryTree.findMax());
+
+        BinaryTree<Integer> binaryTreeInsert = new BinaryTree<>();
+        binaryTreeInsert.insert(10);
+        binaryTreeInsert.insert(5);
+        binaryTreeInsert.insert(6);
+        binaryTreeInsert.insert(20);
+
+        System.out.println("binaryTreeInsert.findNumber(5) = " + binaryTreeInsert.findNumber(6));
     }
 }
